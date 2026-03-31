@@ -11,6 +11,8 @@ import Contact from "./pages/Contact";
 import Quote from "./pages/Quote";
 import Projects from "./pages/Projects";
 import Careers from "./pages/Careers";
+import Jobs from "./pages/Jobs";
+import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
