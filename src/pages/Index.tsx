@@ -27,7 +27,7 @@ const Index = () => {
               Who We Are
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              OBRUS Apex Services is a trusted service company in Nigeria, helping businesses with manpower, facility management, and equipment supply. We deliver quality results with integrity and reliability.
+              OBRUS Apex Services is a trusted service company in Nigeria, helping businesses with manpower, facility management, equipment supply, and environmental services.
             </p>
             <Link
               to="/about"

@@ -26,7 +26,7 @@ const Services = () => {
               What We Do
             </h1>
             <p className="text-primary-foreground/70 text-lg leading-relaxed">
-              We focus on three core areas to support your business — manpower, facility management, and equipment supply.
+              We focus on four core areas to support your business — manpower, facility management, equipment supply, and environmental services.
             </p>
           </motion.div>
         </div>
