@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Users, Building2, Package, ArrowRight } from "lucide-react";
+import { Users, Building2, Package, Leaf, ArrowRight } from "lucide-react";
 import manpowerImg from "@/assets/manpower.jpg";
 import facilityImg from "@/assets/facility.jpg";
 import equipmentImg from "@/assets/equipment.jpg";
+import environmentalImg from "@/assets/environmental.jpg";
 
 export const services = [
   {
@@ -30,7 +31,7 @@ export const services = [
     title: "Facility Management",
     slug: "facility-management",
     image: facilityImg,
-    short: "We manage and maintain buildings and environments to keep them clean, safe, and fully functional.",
+    short: "We maintain buildings and environments to keep them clean, safe, and fully functional.",
     description: "From cleaning to electrical maintenance, we keep your facilities running at their best. Our team handles everything so you can focus on your business.",
     benefits: [
       "Clean and safe environment",
@@ -40,9 +41,7 @@ export const services = [
     details: [
       "Cleaning & Janitorial Services",
       "Fumigation & Pest Control",
-      "Waste Management & Refuse Evacuation",
       "Septic Tank Dislodgement & Sewage Management",
-      "Environmental & Sanitation Services",
       "General Maintenance (Electrical, Plumbing, HVAC)",
     ],
     cta: "Request Service",
@@ -66,6 +65,26 @@ export const services = [
     ],
     cta: "Order Equipment",
   },
+  {
+    icon: Leaf,
+    title: "Environmental Services",
+    slug: "environmental-services",
+    image: environmentalImg,
+    short: "We keep environments clean and safe through waste management and sanitation services.",
+    description: "We provide professional environmental and sanitation services to keep communities, offices, and industrial sites clean, healthy, and compliant with regulations.",
+    benefits: [
+      "Cleaner and healthier environment",
+      "Regulatory compliance",
+      "Reliable waste disposal",
+    ],
+    details: [
+      "Waste Management & Refuse Evacuation",
+      "Environmental & Sanitation Services",
+      "Drainage Cleaning & Maintenance",
+      "Public Health & Hygiene Support",
+    ],
+    cta: "Request Service",
+  },
 ];
 
 const ServicesSection = () => {
@@ -86,11 +105,11 @@ const ServicesSection = () => {
             Our Core Services
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            We focus on three key areas to help your business run smoothly and safely.
+            We focus on four key areas to help your business run smoothly and safely.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {services.map((service, i) => (
             <motion.div
               key={service.slug}
