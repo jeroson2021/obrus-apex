@@ -26,7 +26,7 @@ const Services = () => {
               What We Do
             </h1>
             <p className="text-primary-foreground/70 text-lg leading-relaxed">
-              We offer a full range of services to support your business operations, keep your facilities running, and ensure a safe and clean environment.
+              We focus on three core areas to support your business — manpower, facility management, and equipment supply.
             </p>
           </motion.div>
         </div>
@@ -34,7 +34,7 @@ const Services = () => {
 
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="space-y-6 max-w-5xl mx-auto">
+          <div className="space-y-8 max-w-5xl mx-auto">
             {services.map((service, i) => (
               <motion.div
                 key={service.slug}
@@ -45,19 +45,31 @@ const Services = () => {
               >
                 <Link
                   to={`/services/${service.slug}`}
-                  className="group flex flex-col md:flex-row gap-6 bg-card border border-border rounded-lg p-6 md:p-8 hover:border-secondary/40 hover:shadow-lg transition-all"
+                  className="group flex flex-col md:flex-row gap-0 bg-card border border-border rounded-lg overflow-hidden hover:border-secondary/40 hover:shadow-lg transition-all"
                 >
-                  <div className="w-14 h-14 rounded-md bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                    <service.icon className="w-7 h-7 text-secondary" />
+                  <div className="md:w-72 h-48 md:h-auto flex-shrink-0 overflow-hidden">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      loading="lazy"
+                      width={1280}
+                      height={854}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-heading text-lg font-semibold text-foreground mb-2">
-                      {service.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-3">
+                  <div className="flex-1 p-6 md:p-8">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-md bg-secondary/10 flex items-center justify-center">
+                        <service.icon className="w-5 h-5 text-secondary" />
+                      </div>
+                      <h3 className="font-heading text-lg font-semibold text-foreground">
+                        {service.title}
+                      </h3>
+                    </div>
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                       {service.description}
                     </p>
-                    <ul className="flex flex-wrap gap-2 mb-3">
+                    <ul className="flex flex-wrap gap-2 mb-4">
                       {service.details.map((d) => (
                         <li key={d} className="text-xs bg-secondary/10 text-secondary px-3 py-1 rounded-full">
                           {d}
@@ -65,7 +77,7 @@ const Services = () => {
                       ))}
                     </ul>
                     <span className="inline-flex items-center gap-1 text-secondary text-sm font-medium group-hover:gap-2 transition-all">
-                      View details <ArrowRight size={14} />
+                      {service.cta} <ArrowRight size={14} />
                     </span>
                   </div>
                 </Link>

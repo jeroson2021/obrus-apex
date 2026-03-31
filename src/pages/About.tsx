@@ -2,14 +2,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { motion } from "framer-motion";
-import { Shield, Heart, Award, Star, Target, Eye } from "lucide-react";
+import { Heart, Award, Star, Target, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
+import teamImg from "@/assets/team.jpg";
 
 const values = [
-  { icon: Shield, label: "Safety", desc: "Safety is at the heart of everything we do. We protect our people, clients, and the environment." },
-  { icon: Heart, label: "Integrity", desc: "We are honest and transparent in all our dealings. We do what we say we will do." },
-  { icon: Award, label: "Excellence", desc: "We set high standards and deliver quality work every time." },
+  { icon: Heart, label: "Integrity", desc: "We are honest and transparent in all our dealings." },
   { icon: Star, label: "Reliability", desc: "Our clients trust us because we are dependable and consistent." },
+  { icon: Award, label: "Excellence", desc: "We set high standards and deliver quality work every time." },
 ];
 
 const About = () => {
@@ -33,36 +33,50 @@ const About = () => {
               Who We Are
             </h1>
             <p className="text-primary-foreground/70 text-lg leading-relaxed">
-              OBRUS Apex Services is a Nigeria-based company that provides integrated solutions for manpower supply, facility maintenance, environmental services, and HSE consultancy.
+              A trusted service company in Nigeria, providing manpower, facility management, and equipment solutions.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Company overview */}
+      {/* Company overview with image */}
       <section className="py-16 bg-background">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-6">
-              Our Story
-            </h2>
-            <div className="text-muted-foreground leading-relaxed space-y-4">
-              <p>
-                OBRUS Apex Services was founded with a simple goal: to help businesses in Nigeria operate more efficiently, safely, and cleanly. We saw that many companies struggled to find reliable service providers for their day-to-day operations — from staffing to maintenance to safety compliance.
-              </p>
-              <p>
-                We built our company to fill that gap. Today, we serve a growing number of clients across multiple industries, providing dependable manpower, professional cleaning, waste management, facility maintenance, and HSE solutions.
-              </p>
-              <p>
-                Our team is made up of experienced professionals who are committed to delivering excellent results. We work closely with each client to understand their needs and provide services that make a real difference.
-              </p>
-            </div>
-          </motion.div>
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-6">
+                Our Story
+              </h2>
+              <div className="text-muted-foreground leading-relaxed space-y-4">
+                <p>
+                  OBRUS Apex Services was founded with a simple goal: to help businesses in Nigeria operate more efficiently and safely. We saw that many companies struggled to find reliable service providers for staffing, facility upkeep, and equipment supply.
+                </p>
+                <p>
+                  Today, we serve a growing number of clients across multiple industries. Our team is made up of experienced professionals who are committed to delivering excellent results.
+                </p>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <img
+                src={teamImg}
+                alt="OBRUS Apex Services team"
+                loading="lazy"
+                width={1280}
+                height={854}
+                className="rounded-lg shadow-lg w-full object-cover aspect-[4/3]"
+              />
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -80,7 +94,7 @@ const About = () => {
               <Target className="w-10 h-10 text-secondary mb-4" />
               <h3 className="font-heading text-xl font-bold text-foreground mb-3">Our Mission</h3>
               <p className="text-muted-foreground leading-relaxed">
-                To deliver reliable, safe, and high-quality integrated services that help businesses in Nigeria operate at their best — every day.
+                To provide reliable and efficient services that support business operations.
               </p>
             </motion.div>
             <motion.div
@@ -93,7 +107,7 @@ const About = () => {
               <Eye className="w-10 h-10 text-secondary mb-4" />
               <h3 className="font-heading text-xl font-bold text-foreground mb-3">Our Vision</h3>
               <p className="text-muted-foreground leading-relaxed">
-                To be the most trusted provider of manpower, facility, and environmental services in Nigeria — known for safety, quality, and dependability.
+                To be a trusted service provider across Nigeria.
               </p>
             </motion.div>
           </div>
@@ -114,7 +128,7 @@ const About = () => {
               Our Core Values
             </h2>
           </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {values.map((val, i) => (
               <motion.div
                 key={val.label}
