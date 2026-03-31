@@ -100,7 +100,7 @@ const Quote = () => {
             >
               Submit Quote Request
             </button>
-          </form>
+          </motion.form>
         </div>
       </section>
 
