@@ -24,7 +24,7 @@ const Quote = () => {
               Tell Us What You Need
             </h1>
             <p className="text-primary-foreground/70 text-lg">
-              Fill out the form below and we will get back to you with a quote within 24 hours.
+              Tell us what you need and we will get back to you quickly.
             </p>
           </motion.div>
         </div>

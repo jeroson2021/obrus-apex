@@ -37,13 +37,17 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-semibold text-sm mb-4">Services</h4>
             <div className="flex flex-col gap-2">
-              {["Manpower", "Cleaning", "HSE", "Maintenance"].map((s) => (
+              {[
+                { label: "Manpower Recruitment", to: "/services/manpower" },
+                { label: "Facility Management", to: "/services/facility-management" },
+                { label: "Equipment Procurement", to: "/services/equipment-procurement" },
+              ].map((s) => (
                 <Link
-                  key={s}
-                  to="/services"
+                  key={s.to}
+                  to={s.to}
                   className="text-primary-foreground/60 text-sm hover:text-secondary transition-colors"
                 >
-                  {s}
+                  {s.label}
                 </Link>
               ))}
             </div>
