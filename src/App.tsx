@@ -8,11 +8,13 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
 import Contact from "./pages/Contact";
-import Quote from "./pages/Quote";
+import RequestService from "./pages/RequestService";
 import Projects from "./pages/Projects";
 import Careers from "./pages/Careers";
 import Jobs from "./pages/Jobs";
 import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,11 +31,14 @@ const App = () => (
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/quote" element={<Quote />} />
+          <Route path="/request-service" element={<RequestService />} />
+          <Route path="/quote" element={<RequestService />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

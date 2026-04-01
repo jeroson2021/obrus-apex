@@ -6,7 +6,6 @@ import heroBg from "@/assets/hero-bg.jpg";
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background image */}
       <img
         src={heroBg}
         alt="Professional workers in facility"
@@ -24,33 +23,27 @@ const HeroSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <p className="text-secondary font-heading text-sm font-semibold tracking-widest uppercase mb-4">
-              Integrated Solutions • Peak Performance
+              Trusted Services Across Nigeria
             </p>
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-primary-foreground">
-              Reliable Manpower, Facility Management & Equipment Solutions{" "}
-              <span className="text-secondary">You Can Trust</span>
+              Reliable Manpower, Facility Management, Environmental & Equipment Procurement Services{" "}
+              <span className="text-secondary">in Nigeria</span>
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-xl mb-8 font-body leading-relaxed">
-              We help businesses run smoothly by providing skilled workers, managing facilities, and supplying the right equipment.
+              Obrus Apex Services delivers skilled manpower, efficient facility maintenance, environmental solutions, and quality equipment supply to businesses, estates, and industrial operations across Nigeria.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                to="/services/manpower"
+                to="/request-service"
                 className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:opacity-90 transition-opacity"
               >
-                Hire Staff <ArrowRight size={16} />
+                Request a Service <ArrowRight size={16} />
               </Link>
               <Link
-                to="/services/facility-management"
+                to="/jobs"
                 className="inline-flex items-center justify-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:border-secondary hover:text-secondary transition-colors"
               >
-                Request Service
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center justify-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:border-secondary hover:text-secondary transition-colors"
-              >
-                Contact Us
+                View Available Jobs
               </Link>
             </div>
           </motion.div>

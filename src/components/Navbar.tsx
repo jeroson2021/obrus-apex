@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
@@ -22,7 +22,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="OBRUS Apex Services" className="h-10 w-auto" />
+          <img src={logo} alt="Obrus Apex Services" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop */}
@@ -41,10 +41,16 @@ const Navbar = () => {
             </Link>
           ))}
           <Link
-            to="/quote"
+            to="/request-service"
             className="bg-secondary text-secondary-foreground px-5 py-2 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Get a Quote
+          </Link>
+          <Link
+            to="/login"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-secondary transition-colors"
+          >
+            <LogIn size={16} /> Login
           </Link>
         </div>
 
@@ -79,11 +85,18 @@ const Navbar = () => {
                 </Link>
               ))}
               <Link
-                to="/quote"
+                to="/request-service"
                 onClick={() => setOpen(false)}
                 className="bg-secondary text-secondary-foreground px-5 py-2.5 rounded-md text-sm font-semibold text-center mt-2"
               >
                 Get a Quote
+              </Link>
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-1.5 border border-border text-foreground px-5 py-2.5 rounded-md text-sm font-semibold text-center"
+              >
+                <LogIn size={16} /> Login / Sign Up
               </Link>
             </div>
           </motion.div>
