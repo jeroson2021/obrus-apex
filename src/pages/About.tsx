@@ -33,13 +33,13 @@ const About = () => {
               Who We Are
             </h1>
             <p className="text-primary-foreground/70 text-lg leading-relaxed">
-              A trusted service company in Nigeria, providing manpower, facility management, and equipment solutions.
+              A trusted service company in Nigeria, providing manpower, facility management, environmental services, and equipment solutions.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Company overview with image */}
+      {/* Company overview */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -54,10 +54,10 @@ const About = () => {
               </h2>
               <div className="text-muted-foreground leading-relaxed space-y-4">
                 <p>
-                  OBRUS Apex Services was founded with a simple goal: to help businesses in Nigeria operate more efficiently and safely. We saw that many companies struggled to find reliable service providers for staffing, facility upkeep, and equipment supply.
+                  Obrus Apex Services is a Nigerian-based company focused on delivering manpower recruitment, facility management, environmental services, and equipment procurement.
                 </p>
                 <p>
-                  Today, we serve a growing number of clients across multiple industries. Our team is made up of experienced professionals who are committed to delivering excellent results.
+                  We support businesses by providing skilled personnel, maintaining operational facilities, ensuring clean and safe environments, and supplying essential equipment. Our goal is to ensure efficiency, reliability, safety, and consistent service delivery.
                 </p>
               </div>
             </motion.div>
@@ -69,7 +69,7 @@ const About = () => {
             >
               <img
                 src={teamImg}
-                alt="OBRUS Apex Services team"
+                alt="Obrus Apex Services team"
                 loading="lazy"
                 width={1280}
                 height={854}
@@ -195,10 +195,10 @@ const About = () => {
               Contact Us
             </Link>
             <Link
-              to="/quote"
+              to="/request-service"
               className="border border-secondary-foreground/30 text-secondary-foreground px-7 py-3 rounded-md font-heading font-semibold text-sm hover:bg-secondary-foreground/10 transition-colors"
             >
-              Request a Quote
+              Request a Service
             </Link>
           </div>
         </div>

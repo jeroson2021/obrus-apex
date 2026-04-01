@@ -8,9 +8,9 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
           <div>
-            <img src={logo} alt="OBRUS Apex Services" className="h-12 w-auto mb-4 rounded" />
+            <img src={logo} alt="Obrus Apex Services" className="h-12 w-auto mb-4 rounded" />
             <p className="text-primary-foreground/60 text-sm leading-relaxed">
-              Integrated Solutions. Peak Performance. Trusted services across Nigeria.
+              Reliable Solutions. Peak Performance. Trusted services across Nigeria.
             </p>
           </div>
 
@@ -22,6 +22,7 @@ const Footer = () => {
                 { label: "Services", to: "/services" },
                 { label: "Projects", to: "/projects" },
                 { label: "Careers", to: "/careers" },
+                { label: "Jobs", to: "/jobs" },
               ].map((link) => (
                 <Link
                   key={link.to}
@@ -40,6 +41,7 @@ const Footer = () => {
               {[
                 { label: "Manpower Recruitment", to: "/services/manpower" },
                 { label: "Facility Management", to: "/services/facility-management" },
+                { label: "Environmental Services", to: "/services/environmental-services" },
                 { label: "Equipment Procurement", to: "/services/equipment-procurement" },
               ].map((s) => (
                 <Link
@@ -71,7 +73,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 pt-6 text-center">
           <p className="text-primary-foreground/40 text-xs">
-            © {new Date().getFullYear()} OBRUS Apex Services. All rights reserved.
+            © {new Date().getFullYear()} Obrus Apex Services. All rights reserved.
           </p>
         </div>
       </div>

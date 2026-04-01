@@ -119,7 +119,7 @@ const ServiceDetail = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/quote"
+              to="/request-service"
               className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground px-7 py-3 rounded-md font-heading font-semibold text-sm hover:opacity-90 transition-opacity"
             >
               {service.cta} <ArrowRight size={16} />
