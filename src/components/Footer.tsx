@@ -21,8 +21,8 @@ const Footer = () => {
                 { label: "About Us", to: "/about" },
                 { label: "Services", to: "/services" },
                 { label: "Projects", to: "/projects" },
-                { label: "Careers", to: "/careers" },
                 { label: "Jobs", to: "/jobs" },
+                { label: "Request a Quote", to: "/request-service" },
               ].map((link) => (
                 <Link
                   key={link.to}
@@ -58,14 +58,14 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-semibold text-sm mb-4">Contact</h4>
             <div className="flex flex-col gap-3">
+              <a href="tel:+2348078747510" className="flex items-center gap-2 text-primary-foreground/60 text-sm hover:text-secondary transition-colors">
+                <Phone size={14} /> +234 807 874 7510
+              </a>
+              <a href="mailto:info@obrusApex.com.ng" className="flex items-center gap-2 text-primary-foreground/60 text-sm hover:text-secondary transition-colors">
+                <Mail size={14} /> info@obrusApex.com.ng
+              </a>
               <div className="flex items-center gap-2 text-primary-foreground/60 text-sm">
-                <Phone size={14} /> +234 800 000 0000
-              </div>
-              <div className="flex items-center gap-2 text-primary-foreground/60 text-sm">
-                <Mail size={14} /> info@obrusapex.com
-              </div>
-              <div className="flex items-center gap-2 text-primary-foreground/60 text-sm">
-                <MapPin size={14} /> Lagos, Nigeria
+                <MapPin size={14} /> Elelewon, Port Harcourt, Nigeria
               </div>
             </div>
           </div>

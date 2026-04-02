@@ -42,9 +42,9 @@ const Contact = () => {
               <h2 className="font-heading text-2xl font-bold text-foreground mb-6">Contact Information</h2>
               <div className="space-y-5 mb-8">
                 {[
-                  { icon: Phone, label: "Phone", text: "+234 800 000 0000" },
-                  { icon: Mail, label: "Email", text: "info@obrusapex.com" },
-                  { icon: MapPin, label: "Address", text: "Lagos, Nigeria" },
+                  { icon: Phone, label: "Phone", text: "+234 807 874 7510", href: "tel:+2348078747510" },
+                  { icon: Mail, label: "Email", text: "info@obrusApex.com.ng", href: "mailto:info@obrusApex.com.ng" },
+                  { icon: MapPin, label: "Address", text: "Elelewon, Port Harcourt, Nigeria" },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-4">
                     <div className="w-11 h-11 rounded-md bg-secondary/10 flex items-center justify-center flex-shrink-0">
@@ -52,14 +52,18 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-heading font-semibold text-sm text-foreground">{item.label}</p>
-                      <p className="text-muted-foreground text-sm">{item.text}</p>
+                      {item.href ? (
+                        <a href={item.href} className="text-muted-foreground text-sm hover:text-secondary transition-colors">{item.text}</a>
+                      ) : (
+                        <p className="text-muted-foreground text-sm">{item.text}</p>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
 
               <a
-                href="https://wa.me/2348000000000"
+                href="https://wa.me/2348078747510"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-6 py-3 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
@@ -67,9 +71,18 @@ const Contact = () => {
                 <MessageCircle size={18} /> Chat on WhatsApp
               </a>
 
-              {/* Map placeholder */}
-              <div className="mt-8 bg-muted border border-border rounded-lg h-48 flex items-center justify-center">
-                <p className="text-muted-foreground text-sm">Google Maps — Lagos, Nigeria</p>
+              {/* Map */}
+              <div className="mt-8 rounded-lg overflow-hidden border border-border">
+                <iframe
+                  title="Obrus Apex Services Location"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15905.0!2d7.05!3d4.85!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1069d3a!2sElelewon%2C+Port+Harcourt!5e0!3m2!1sen!2sng!4v1700000000000"
+                  width="100%"
+                  height="200"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </motion.div>
 
