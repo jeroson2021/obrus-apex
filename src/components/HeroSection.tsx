@@ -8,7 +8,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex items-center overflow-hidden">
       <img
         src={heroBg}
-        alt="Professional workers in facility"
+        alt="Professional facility and environmental services in Nigeria"
         className="absolute inset-0 w-full h-full object-cover"
         width={1920}
         height={1080}
@@ -26,24 +26,24 @@ const HeroSection = () => {
               Trusted Services Across Nigeria
             </p>
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-primary-foreground">
-              Reliable Manpower, Facility Management, Environmental & Equipment Procurement Services{" "}
-              <span className="text-secondary">in Nigeria</span>
+              Reliable Facility, Environmental & Manpower Solutions{" "}
+              <span className="text-secondary">You Can Trust</span>
             </h1>
             <p className="text-primary-foreground/80 text-lg max-w-xl mb-8 font-body leading-relaxed">
-              Obrus Apex Services delivers skilled manpower, efficient facility maintenance, environmental solutions, and quality equipment supply to businesses, estates, and industrial operations across Nigeria.
+              Obrus Apex Services delivers skilled manpower, efficient facility maintenance, environmental solutions, and quality equipment supply to corporate and industrial clients across Nigeria.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/request-service"
                 className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:opacity-90 transition-opacity"
               >
-                Request a Service <ArrowRight size={16} />
+                Request a Quote <ArrowRight size={16} />
               </Link>
               <Link
-                to="/jobs"
+                to="/contact"
                 className="inline-flex items-center justify-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:border-secondary hover:text-secondary transition-colors"
               >
-                View Available Jobs
+                Contact Us
               </Link>
             </div>
           </motion.div>
