@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const serviceTypes = [
   { value: "manpower", label: "Manpower Recruitment" },
@@ -22,10 +25,14 @@ const TOTAL_STEPS = 3;
 const RequestService = () => {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [serviceType, setServiceType] = useState("");
   const [fields, setFields] = useState<Record<string, string>>({});
-  const [contact, setContact] = useState({ name: "", phone: "", email: "" });
+  const [contact, setContact] = useState({ name: "", company: "", phone: "", email: "" });
+
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const updateField = (key: string, value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }));
@@ -38,8 +45,25 @@ const RequestService = () => {
     return false;
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    const { error } = await supabase.from("service_requests").insert({
+      user_id: user?.id || null,
+      full_name: contact.name,
+      company_name: contact.company || null,
+      phone: contact.phone,
+      email: contact.email,
+      service_type: serviceType,
+      service_details: fields,
+      location: fields.envLocation || fields.location || null,
+    });
+    setSubmitting(false);
+
+    if (error) {
+      toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+    } else {
+      setSubmitted(true);
+    }
   };
 
   if (submitted) {
@@ -50,18 +74,10 @@ const RequestService = () => {
           <div className="container mx-auto px-4 max-w-lg text-center">
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
               <CheckCircle2 className="w-16 h-16 text-secondary mx-auto mb-6" />
-              <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">
-                Your Request Has Been Received
-              </h1>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                Our team will contact you within 24 hours. Thank you for choosing Obrus Apex Services.
-              </p>
-              <p className="text-muted-foreground text-sm mb-8">
-                For urgent requests, please contact us via phone or WhatsApp at +234 807 874 7510.
-              </p>
-              <Button variant="secondary" asChild>
-                <a href="/">Back to Home</a>
-              </Button>
+              <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">Your Request Has Been Received</h1>
+              <p className="text-muted-foreground leading-relaxed mb-6">Our team will contact you within 24 hours. Thank you for choosing Obrus Apex Services.</p>
+              <p className="text-muted-foreground text-sm mb-8">For urgent requests, please contact us via phone or WhatsApp at +234 807 874 7510.</p>
+              <Button variant="secondary" asChild><a href="/">Back to Home</a></Button>
             </motion.div>
           </div>
         </section>
@@ -73,23 +89,17 @@ const RequestService = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-
       <section className="pt-28 pb-16 bg-primary">
         <div className="container mx-auto px-4">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
-            <h1 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-              Request a Service
-            </h1>
-            <p className="text-primary-foreground/70 text-lg">
-              Fill this form to get a fast and accurate quote. Our team typically responds within 24 hours.
-            </p>
+            <h1 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-4">Request a Service</h1>
+            <p className="text-primary-foreground/70 text-lg">Fill this form to get a fast and accurate quote. Our team typically responds within 24 hours.</p>
           </motion.div>
         </div>
       </section>
 
       <section className="py-12 bg-background">
         <div className="container mx-auto px-4 max-w-2xl">
-          {/* Progress */}
           <div className="mb-8">
             <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
               <span>Step {step} of {TOTAL_STEPS}</span>
@@ -98,14 +108,7 @@ const RequestService = () => {
             <Progress value={(step / TOTAL_STEPS) * 100} className="h-2" />
           </div>
 
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-card border border-border rounded-lg p-8"
-          >
-            {/* Step 1: Service Type */}
+          <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }} className="bg-card border border-border rounded-lg p-8">
             {step === 1 && (
               <div>
                 <h2 className="font-heading text-xl font-bold text-foreground mb-6">Select Service</h2>
@@ -120,7 +123,6 @@ const RequestService = () => {
               </div>
             )}
 
-            {/* Step 2: Dynamic Service Details */}
             {step === 2 && (
               <div>
                 <h2 className="font-heading text-xl font-bold text-foreground mb-6">Service Details</h2>
@@ -186,19 +188,18 @@ const RequestService = () => {
               </div>
             )}
 
-            {/* Step 3: Contact Details */}
             {step === 3 && (
               <div>
                 <h2 className="font-heading text-xl font-bold text-foreground mb-6">Contact Details</h2>
                 <div className="space-y-4">
                   <div><Label>Full Name *</Label><Input placeholder="Your full name" value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} /></div>
+                  <div><Label>Company Name</Label><Input placeholder="Your company (optional)" value={contact.company} onChange={(e) => setContact({ ...contact, company: e.target.value })} /></div>
                   <div><Label>Phone Number *</Label><Input type="tel" placeholder="+234..." value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} /></div>
                   <div><Label>Email Address *</Label><Input type="email" placeholder="you@example.com" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} /></div>
                 </div>
               </div>
             )}
 
-            {/* Navigation */}
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
               <Button variant="outline" onClick={() => setStep(step - 1)} disabled={step === 1}>
                 <ArrowLeft size={16} /> Back
@@ -208,8 +209,8 @@ const RequestService = () => {
                   Next <ArrowRight size={16} />
                 </Button>
               ) : (
-                <Button variant="secondary" onClick={handleSubmit} disabled={!canNext()}>
-                  Submit Request
+                <Button variant="secondary" onClick={handleSubmit} disabled={!canNext() || submitting}>
+                  {submitting ? "Submitting..." : "Submit Request"}
                 </Button>
               )}
             </div>
