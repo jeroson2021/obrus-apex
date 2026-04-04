@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { UserPlus } from "lucide-react";
