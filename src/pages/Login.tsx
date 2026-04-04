@@ -39,6 +39,7 @@ const Login = () => {
       <Navbar />
       <section className="pt-28 pb-20 bg-muted min-h-[80vh] flex items-center">
         <div className="container mx-auto px-4">
+          <div className="max-w-md mx-auto"><BackButton /></div>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-md mx-auto">
             <div className="bg-card border border-border rounded-lg p-8">
               <div className="text-center mb-8">

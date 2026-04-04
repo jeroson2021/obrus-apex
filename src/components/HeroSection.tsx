@@ -34,16 +34,16 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                to="/request-service"
+                to="/signup"
                 className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:opacity-90 transition-opacity"
               >
-                Request a Quote <ArrowRight size={16} />
+                Get Started <ArrowRight size={16} />
               </Link>
               <Link
-                to="/contact"
+                to="/request-service"
                 className="inline-flex items-center justify-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-md font-heading font-semibold text-sm hover:border-secondary hover:text-secondary transition-colors"
               >
-                Contact Us
+                Request a Quote
               </Link>
             </div>
           </motion.div>

@@ -49,6 +49,7 @@ const SignUp = () => {
       <Navbar />
       <section className="pt-28 pb-20 bg-background">
         <div className="container mx-auto px-4">
+          <div className="max-w-md mx-auto"><BackButton /></div>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-md mx-auto">
             <div className="text-center mb-8">
               <div className="w-14 h-14 rounded-md bg-secondary/10 flex items-center justify-center mx-auto mb-4">
