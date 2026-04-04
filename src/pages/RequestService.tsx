@@ -2,34 +2,38 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import BackButton from "@/components/BackButton";
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import ServiceTypeStep from "@/components/request-service/ServiceTypeStep";
+import ServiceDetailsStep from "@/components/request-service/ServiceDetailsStep";
+import SuccessMessage from "@/components/request-service/SuccessMessage";
 
-const serviceTypes = [
-  { value: "manpower", label: "Manpower Recruitment" },
-  { value: "facility", label: "Facility Management" },
-  { value: "environmental", label: "Environmental Services" },
-  { value: "equipment", label: "Equipment Procurement" },
-];
-
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 2;
 
 const RequestService = () => {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // Step 1: Contact + Service type
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [clientType, setClientType] = useState("individual");
+  const [companyName, setCompanyName] = useState("");
+  const [contactPerson, setContactPerson] = useState("");
   const [serviceType, setServiceType] = useState("");
+
+  // Step 2: Dynamic details
   const [fields, setFields] = useState<Record<string, string>>({});
-  const [contact, setContact] = useState({ name: "", company: "", phone: "", email: "" });
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [docFile, setDocFile] = useState<File | null>(null);
 
   const { user } = useAuth();
   const { toast } = useToast();
@@ -39,58 +43,66 @@ const RequestService = () => {
   };
 
   const canNext = () => {
-    if (step === 1) return !!serviceType;
-    if (step === 2) return true;
-    if (step === 3) return !!contact.name && !!contact.phone && !!contact.email;
+    if (step === 1) return !!serviceType && !!fullName && !!email && !!phone && (clientType !== "company" || !!companyName);
+    if (step === 2) return !!fields.state;
     return false;
+  };
+
+  const uploadFile = async (file: File, bucket: string) => {
+    const ext = file.name.split(".").pop();
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from(bucket).upload(path, file);
+    if (error) throw error;
+    return path;
   };
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    const { error } = await supabase.from("service_requests").insert({
-      user_id: user?.id || null,
-      full_name: contact.name,
-      company_name: contact.company || null,
-      phone: contact.phone,
-      email: contact.email,
-      service_type: serviceType,
-      service_details: fields,
-      location: fields.envLocation || fields.location || null,
-    });
-    setSubmitting(false);
+    try {
+      let cvUrl: string | null = null;
+      let docUrl: string | null = null;
 
-    if (error) {
-      toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
-    } else {
+      if (cvFile) cvUrl = await uploadFile(cvFile, "cvs");
+      if (docFile) docUrl = await uploadFile(docFile, "cvs");
+
+      const serviceDetails = {
+        ...fields,
+        clientType,
+        contactPerson: contactPerson || null,
+        ...(cvUrl ? { cvUrl } : {}),
+        ...(docUrl ? { docUrl } : {}),
+      };
+
+      const location = [fields.state, fields.city].filter(Boolean).join(", ");
+
+      const { error } = await supabase.from("service_requests").insert({
+        user_id: user?.id || null,
+        full_name: fullName,
+        company_name: clientType === "company" ? companyName : null,
+        phone,
+        email,
+        service_type: serviceType,
+        service_details: serviceDetails,
+        location: location || null,
+      });
+
+      if (error) throw error;
       setSubmitted(true);
+    } catch (err: any) {
+      toast({ title: "Something went wrong", description: err.message, variant: "destructive" });
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <section className="pt-28 pb-20">
-          <div className="container mx-auto px-4 max-w-lg text-center">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-              <CheckCircle2 className="w-16 h-16 text-secondary mx-auto mb-6" />
-              <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">Your Request Has Been Received</h1>
-              <p className="text-muted-foreground leading-relaxed mb-6">Our team will contact you within 24 hours. Thank you for choosing Obrus Apex Services.</p>
-              <p className="text-muted-foreground text-sm mb-8">For urgent requests, please contact us via phone or WhatsApp at +234 807 874 7510.</p>
-              <Button variant="secondary" asChild><a href="/">Back to Home</a></Button>
-            </motion.div>
-          </div>
-        </section>
-        <Footer />
-      </div>
-    );
-  }
+  if (submitted) return <SuccessMessage />;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <section className="pt-28 pb-16 bg-primary">
         <div className="container mx-auto px-4">
+          <BackButton label="Go Back" />
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-3xl">
             <h1 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-4">Request a Service</h1>
             <p className="text-primary-foreground/70 text-lg">Fill this form to get a fast and accurate quote. Our team typically responds within 24 hours.</p>
@@ -110,94 +122,25 @@ const RequestService = () => {
 
           <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }} className="bg-card border border-border rounded-lg p-8">
             {step === 1 && (
-              <div>
-                <h2 className="font-heading text-xl font-bold text-foreground mb-6">Select Service</h2>
-                <RadioGroup value={serviceType} onValueChange={setServiceType} className="space-y-3">
-                  {serviceTypes.map((s) => (
-                    <div key={s.value} className="flex items-center space-x-3 p-3 border border-border rounded-md hover:border-secondary/40 transition-colors">
-                      <RadioGroupItem value={s.value} id={s.value} />
-                      <Label htmlFor={s.value} className="cursor-pointer flex-1">{s.label}</Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
+              <ServiceTypeStep
+                serviceType={serviceType} setServiceType={setServiceType}
+                clientType={clientType} setClientType={setClientType}
+                fullName={fullName} setFullName={setFullName}
+                email={email} setEmail={setEmail}
+                phone={phone} setPhone={setPhone}
+                companyName={companyName} setCompanyName={setCompanyName}
+                contactPerson={contactPerson} setContactPerson={setContactPerson}
+              />
             )}
 
             {step === 2 && (
-              <div>
-                <h2 className="font-heading text-xl font-bold text-foreground mb-6">Service Details</h2>
-                <div className="space-y-4">
-                  {serviceType === "manpower" && (
-                    <>
-                      <div><Label>Skill Type</Label><Input placeholder="e.g. HVAC Technician, Electrician" value={fields.skillType || ""} onChange={(e) => updateField("skillType", e.target.value)} /></div>
-                      <div><Label>Number of Staff</Label><Input type="number" placeholder="e.g. 5" value={fields.staffCount || ""} onChange={(e) => updateField("staffCount", e.target.value)} /></div>
-                      <div>
-                        <Label>Duration</Label>
-                        <RadioGroup value={fields.duration || ""} onValueChange={(v) => updateField("duration", v)} className="flex gap-4 mt-2">
-                          <div className="flex items-center space-x-2"><RadioGroupItem value="short-term" id="short" /><Label htmlFor="short">Short-term</Label></div>
-                          <div className="flex items-center space-x-2"><RadioGroupItem value="long-term" id="long" /><Label htmlFor="long">Long-term</Label></div>
-                        </RadioGroup>
-                      </div>
-                    </>
-                  )}
-                  {serviceType === "facility" && (
-                    <>
-                      <div>
-                        <Label>Type of Building</Label>
-                        <RadioGroup value={fields.facilityType || ""} onValueChange={(v) => updateField("facilityType", v)} className="flex flex-wrap gap-4 mt-2">
-                          {["Office", "Estate", "Industrial"].map((t) => (
-                            <div key={t} className="flex items-center space-x-2"><RadioGroupItem value={t.toLowerCase()} id={`ft-${t}`} /><Label htmlFor={`ft-${t}`}>{t}</Label></div>
-                          ))}
-                        </RadioGroup>
-                      </div>
-                      <div><Label>Services Needed</Label><Input placeholder="e.g. Electrical maintenance, HVAC servicing" value={fields.services || ""} onChange={(e) => updateField("services", e.target.value)} /></div>
-                    </>
-                  )}
-                  {serviceType === "environmental" && (
-                    <>
-                      <div>
-                        <Label>Type of Service</Label>
-                        <div className="grid grid-cols-2 gap-2 mt-2">
-                          {["Fumigation", "Waste Management", "Septic Tank Dislodgment", "Fire Extinguisher Servicing", "Cleaning Services", "General Maintenance"].map((t) => (
-                            <label key={t} className={`flex items-center gap-2 p-2.5 border rounded-md text-sm cursor-pointer transition-colors ${fields.envType === t ? "border-secondary bg-secondary/5 text-foreground" : "border-border text-muted-foreground hover:border-secondary/40"}`}>
-                              <input type="radio" name="envType" value={t} checked={fields.envType === t} onChange={() => updateField("envType", t)} className="sr-only" />
-                              {t}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                      <div><Label>Location</Label><Input placeholder="e.g. Port Harcourt" value={fields.envLocation || ""} onChange={(e) => updateField("envLocation", e.target.value)} /></div>
-                      <div>
-                        <Label>Frequency</Label>
-                        <RadioGroup value={fields.envFrequency || ""} onValueChange={(v) => updateField("envFrequency", v)} className="flex flex-wrap gap-4 mt-2">
-                          {["One-time", "Weekly", "Monthly"].map((f) => (
-                            <div key={f} className="flex items-center space-x-2"><RadioGroupItem value={f.toLowerCase()} id={`ef-${f}`} /><Label htmlFor={`ef-${f}`}>{f}</Label></div>
-                          ))}
-                        </RadioGroup>
-                      </div>
-                    </>
-                  )}
-                  {serviceType === "equipment" && (
-                    <>
-                      <div><Label>Equipment Type</Label><Input placeholder="e.g. HVAC components, electrical materials" value={fields.equipType || ""} onChange={(e) => updateField("equipType", e.target.value)} /></div>
-                      <div><Label>Quantity</Label><Input type="number" placeholder="e.g. 10" value={fields.quantity || ""} onChange={(e) => updateField("quantity", e.target.value)} /></div>
-                      <div><Label>Budget (optional)</Label><Input placeholder="e.g. ₦500,000" value={fields.budget || ""} onChange={(e) => updateField("budget", e.target.value)} /></div>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {step === 3 && (
-              <div>
-                <h2 className="font-heading text-xl font-bold text-foreground mb-6">Contact Details</h2>
-                <div className="space-y-4">
-                  <div><Label>Full Name *</Label><Input placeholder="Your full name" value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} /></div>
-                  <div><Label>Company Name</Label><Input placeholder="Your company (optional)" value={contact.company} onChange={(e) => setContact({ ...contact, company: e.target.value })} /></div>
-                  <div><Label>Phone Number *</Label><Input type="tel" placeholder="+234..." value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} /></div>
-                  <div><Label>Email Address *</Label><Input type="email" placeholder="you@example.com" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} /></div>
-                </div>
-              </div>
+              <ServiceDetailsStep
+                serviceType={serviceType}
+                fields={fields}
+                updateField={updateField}
+                cvFile={cvFile} setCvFile={setCvFile}
+                docFile={docFile} setDocFile={setDocFile}
+              />
             )}
 
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
