@@ -85,7 +85,7 @@ const AdminRequests = () => {
                     <TableCell>{r.phone}</TableCell>
                     <TableCell>{r.location || "—"}</TableCell>
                     <TableCell>
-                      <Select value={r.status} onValueChange={(v) => updateStatus(r.id, v)}>
+                      <Select value={r.status} onValueChange={(v) => updateStatus(r.id, v as "pending" | "in_progress" | "completed" | "cancelled")}>
                         <SelectTrigger className="w-[130px] h-8">
                           <SelectValue />
                         </SelectTrigger>

@@ -73,7 +73,7 @@ const AdminRecruitment = () => {
                       ) : "—"}
                     </TableCell>
                     <TableCell>
-                      <Select value={a.status} onValueChange={(v) => updateStatus(a.id, v)}>
+                      <Select value={a.status} onValueChange={(v) => updateStatus(a.id, v as "submitted" | "under_review" | "shortlisted" | "rejected" | "hired")}>
                         <SelectTrigger className="w-[130px] h-8"><SelectValue /></SelectTrigger>
                         <SelectContent>
                           {statuses.map(s => (
