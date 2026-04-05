@@ -61,6 +61,11 @@ const Navbar = () => {
           </Link>
           {user ? (
             <>
+              {isAdmin && (
+                <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-secondary transition-colors">
+                  <Shield size={16} /> Admin
+                </Link>
+              )}
               <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-secondary transition-colors">
                 <User size={16} /> Dashboard
               </Link>
