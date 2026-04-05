@@ -101,6 +101,11 @@ const Navbar = () => {
               </Link>
               {user ? (
                 <>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setOpen(false)} className="inline-flex items-center justify-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-md text-sm font-semibold text-center">
+                      <Shield size={16} /> Admin Panel
+                    </Link>
+                  )}
                   <Link to="/dashboard" onClick={() => setOpen(false)} className="inline-flex items-center justify-center gap-1.5 border border-border text-foreground px-5 py-2.5 rounded-md text-sm font-semibold text-center">
                     <User size={16} /> Dashboard
                   </Link>
