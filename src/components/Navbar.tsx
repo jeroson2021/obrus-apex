@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Menu, X, LogIn, User, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, LogIn, User, LogOut, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { label: "Home", to: "/" },
