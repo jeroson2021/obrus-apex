@@ -56,6 +56,69 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_broadcast: boolean
+          is_read: boolean
+          recipient_id: string | null
+          sender_id: string | null
+          subject: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          is_broadcast?: boolean
+          is_read?: boolean
+          recipient_id?: string | null
+          sender_id?: string | null
+          subject: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_broadcast?: boolean
+          is_read?: boolean
+          recipient_id?: string | null
+          sender_id?: string | null
+          subject?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          type?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_name: string | null
@@ -133,6 +196,50 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      staff_tasks: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          description: string | null
+          id: string
+          service_request_id: string | null
+          staff_user_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          service_request_id?: string | null
+          staff_user_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          service_request_id?: string | null
+          staff_user_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_tasks_service_request_id_fkey"
+            columns: ["service_request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

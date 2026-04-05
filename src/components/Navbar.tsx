@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Menu, X, LogIn, User, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, LogIn, User, LogOut, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const navLinks = [
   { label: "Home", to: "/" },
@@ -17,9 +18,15 @@ const navLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -54,6 +61,11 @@ const Navbar = () => {
           </Link>
           {user ? (
             <>
+              {isAdmin && (
+                <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-secondary transition-colors">
+                  <Shield size={16} /> Admin
+                </Link>
+              )}
               <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-secondary transition-colors">
                 <User size={16} /> Dashboard
               </Link>
@@ -89,6 +101,11 @@ const Navbar = () => {
               </Link>
               {user ? (
                 <>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setOpen(false)} className="inline-flex items-center justify-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-md text-sm font-semibold text-center">
+                      <Shield size={16} /> Admin Panel
+                    </Link>
+                  )}
                   <Link to="/dashboard" onClick={() => setOpen(false)} className="inline-flex items-center justify-center gap-1.5 border border-border text-foreground px-5 py-2.5 rounded-md text-sm font-semibold text-center">
                     <User size={16} /> Dashboard
                   </Link>
