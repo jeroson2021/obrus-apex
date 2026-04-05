@@ -24,7 +24,7 @@ const AdminRequests = () => {
 
   useEffect(() => { fetchRequests(); }, []);
 
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: "pending" | "in_progress" | "completed" | "cancelled") => {
     const { error } = await supabase.from("service_requests").update({ status }).eq("id", id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });

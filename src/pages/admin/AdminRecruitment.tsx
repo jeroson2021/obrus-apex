@@ -23,7 +23,7 @@ const AdminRecruitment = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: "submitted" | "under_review" | "shortlisted" | "rejected" | "hired") => {
     const { error } = await supabase.from("job_applications").update({ status }).eq("id", id);
     if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
     else { toast({ title: "Status updated" }); fetchData(); }
