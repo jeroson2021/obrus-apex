@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BackButton from "@/components/BackButton";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { UserPlus } from "lucide-react";
@@ -58,7 +59,15 @@ const SignUp = () => {
               <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-2">Create an Account</h1>
               <p className="text-muted-foreground text-sm">Sign up to apply for jobs, request services, and manage your profile.</p>
             </div>
-            <form className="bg-card border border-border rounded-lg p-8 space-y-4" onSubmit={handleSubmit}>
+            <div className="bg-card border border-border rounded-lg p-8 space-y-4">
+              <GoogleSignInButton />
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
+                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">or</span></div>
+              </div>
+
+              <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>First Name *</Label>
@@ -92,7 +101,8 @@ const SignUp = () => {
                 Already have an account?{" "}
                 <Link to="/login" className="text-secondary font-medium hover:underline">Log in</Link>
               </p>
-            </form>
+              </form>
+            </div>
           </motion.div>
         </div>
       </section>
