@@ -103,6 +103,7 @@ const SignUp = () => {
               </p>
               </form>
             </div>
+          </motion.div>
         </div>
       </section>
       <Footer />
