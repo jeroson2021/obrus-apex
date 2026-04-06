@@ -56,6 +56,51 @@ export type Database = {
         }
         Relationships: []
       }
+      jobs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          department: string | null
+          description: string | null
+          experience: string | null
+          id: string
+          is_active: boolean
+          location: string
+          requirements: string[] | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          description?: string | null
+          experience?: string | null
+          id?: string
+          is_active?: boolean
+          location: string
+          requirements?: string[] | null
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          description?: string | null
+          experience?: string | null
+          id?: string
+          is_active?: boolean
+          location?: string
+          requirements?: string[] | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           body: string

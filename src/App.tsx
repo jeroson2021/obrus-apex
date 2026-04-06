@@ -30,6 +30,7 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminJobs from "./pages/admin/AdminJobs";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ const App = () => (
             <Route path="/admin/staff" element={<AdminRoute><AdminStaff /></AdminRoute>} />
             <Route path="/admin/requests" element={<AdminRoute><AdminRequests /></AdminRoute>} />
             <Route path="/admin/recruitment" element={<AdminRoute><AdminRecruitment /></AdminRoute>} />
+            <Route path="/admin/jobs" element={<AdminRoute><AdminJobs /></AdminRoute>} />
             <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
             <Route path="/admin/notifications" element={<AdminRoute><AdminNotifications /></AdminRoute>} />
             <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
