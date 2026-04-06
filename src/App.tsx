@@ -30,6 +30,7 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminJobs from "./pages/admin/AdminJobs";
 
 const queryClient = new QueryClient();
 

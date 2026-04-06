@@ -13,6 +13,7 @@ const navItems = [
   { label: "Users", to: "/admin/users", icon: Users },
   { label: "Staff", to: "/admin/staff", icon: UserCheck },
   { label: "Service Requests", to: "/admin/requests", icon: ClipboardList },
+  { label: "Job Listings", to: "/admin/jobs", icon: Briefcase },
   { label: "Recruitment", to: "/admin/recruitment", icon: Briefcase },
   { label: "Messages", to: "/admin/messages", icon: Mail },
   { label: "Notifications", to: "/admin/notifications", icon: Bell },
