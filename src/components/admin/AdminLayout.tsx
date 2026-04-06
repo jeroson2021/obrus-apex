@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, Users, UserCheck, ClipboardList, Briefcase, Leaf, ShoppingCart,
+  LayoutDashboard, Users, UserCheck, ClipboardList, Briefcase, FileText,
   Mail, Bell, BarChart3, Settings, LogOut, Menu, X, Shield
 } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +14,7 @@ const navItems = [
   { label: "Staff", to: "/admin/staff", icon: UserCheck },
   { label: "Service Requests", to: "/admin/requests", icon: ClipboardList },
   { label: "Job Listings", to: "/admin/jobs", icon: Briefcase },
-  { label: "Recruitment", to: "/admin/recruitment", icon: Briefcase },
+  { label: "Recruitment", to: "/admin/recruitment", icon: FileText },
   { label: "Messages", to: "/admin/messages", icon: Mail },
   { label: "Notifications", to: "/admin/notifications", icon: Bell },
   { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
