@@ -1,12 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BackButton from "@/components/BackButton";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,27 +21,63 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const { signUp, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validation
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      toast({ title: "Please fill all required fields", variant: "destructive" });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast({ title: "Passwords do not match", variant: "destructive" });
       return;
     }
+
+    if (password.length < 6) {
+      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
+
     setLoading(true);
+    console.log('[SignUp] Creating account:', email);
+    
     const fullName = `${firstName} ${lastName}`.trim();
     const { error } = await signUp(email, password, fullName);
     setLoading(false);
 
     if (error) {
-      toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Account created!", description: "Redirecting.........." });
-      navigate("/login");
+      console.error('[SignUp] Sign up failed:', error);
+      toast({ 
+        title: "Sign up failed", 
+        description: error.message, 
+        variant: "destructive" 
+      });
+      return; // IMPORTANT: Stop here if there's an error
     }
+
+    // Only show success if no error
+    console.log('[SignUp] Account created successfully');
+    toast({ 
+      title: "Account created!", 
+      description: "Check your email to confirm. Redirecting to login..." 
+    });
+    
+    setTimeout(() => {
+      navigate("/login");
+    }, 1500);
   };
 
   return (
@@ -68,39 +103,74 @@ const SignUp = () => {
               </div>
 
               <form className="space-y-4" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>First Name *</Label>
-                  <Input type="text" required placeholder="John" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>First Name *</Label>
+                    <Input 
+                      type="text" 
+                      required 
+                      placeholder="John" 
+                      value={firstName} 
+                      onChange={(e) => setFirstName(e.target.value)} 
+                    />
+                  </div>
+                  <div>
+                    <Label>Last Name *</Label>
+                    <Input 
+                      type="text" 
+                      required 
+                      placeholder="Doe" 
+                      value={lastName} 
+                      onChange={(e) => setLastName(e.target.value)} 
+                    />
+                  </div>
                 </div>
                 <div>
-                  <Label>Last Name *</Label>
-                  <Input type="text" required placeholder="Doe" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                  <Label>Email *</Label>
+                  <Input 
+                    type="email" 
+                    required 
+                    placeholder="you@email.com" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                  />
                 </div>
-              </div>
-              <div>
-                <Label>Email *</Label>
-                <Input type="email" required placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-              <div>
-                <Label>Phone</Label>
-                <Input type="tel" placeholder="+234..." value={phone} onChange={(e) => setPhone(e.target.value)} />
-              </div>
-              <div>
-                <Label>Password *</Label>
-                <Input type="password" required placeholder="Create a password" value={password} onChange={(e) => setPassword(e.target.value)} />
-              </div>
-              <div>
-                <Label>Confirm Password *</Label>
-                <Input type="password" required placeholder="Confirm your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-              </div>
-              <Button type="submit" variant="secondary" className="w-full" disabled={loading}>
-                {loading ? "Creating account..." : "Create Account"}
-              </Button>
-              <p className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link to="/login" className="text-secondary font-medium hover:underline">Log in</Link>
-              </p>
+                <div>
+                  <Label>Phone</Label>
+                  <Input 
+                    type="tel" 
+                    placeholder="+234..." 
+                    value={phone} 
+                    onChange={(e) => setPhone(e.target.value)} 
+                  />
+                </div>
+                <div>
+                  <Label>Password *</Label>
+                  <Input 
+                    type="password" 
+                    required 
+                    placeholder="Create a password (min 6 characters)" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                  />
+                </div>
+                <div>
+                  <Label>Confirm Password *</Label>
+                  <Input 
+                    type="password" 
+                    required 
+                    placeholder="Confirm your password" 
+                    value={confirmPassword} 
+                    onChange={(e) => setConfirmPassword(e.target.value)} 
+                  />
+                </div>
+                <Button type="submit" variant="secondary" className="w-full" disabled={loading}>
+                  {loading ? "Creating account..." : "Create Account"}
+                </Button>
+                <p className="text-center text-sm text-muted-foreground">
+                  Already have an account?{" "}
+                  <Link to="/login" className="text-secondary font-medium hover:underline">Log in</Link>
+                </p>
               </form>
             </div>
           </motion.div>
