@@ -20,25 +20,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    const controller = new AbortController();
 
     const initAuth = async () => {
       try {
-        // Set up listener
+        // Set up listener for auth state changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, sess) => {
           if (mounted) {
+            console.log('[Auth] State changed:', _event);
             setSession(sess);
             setUser(sess?.user ?? null);
             setLoading(false);
           }
         });
 
-        // Get session
+        // Get current session
         const { data: { session: sess }, error } = await supabase.auth.getSession();
         
         if (mounted) {
           if (error) {
-            console.warn('Auth error:', error);
+            console.warn('[Auth] Session error:', error);
           }
           setSession(sess ?? null);
           setUser(sess?.user ?? null);
@@ -47,29 +47,102 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         return () => subscription.unsubscribe();
       } catch (err) {
-        console.error('Auth init error:', err);
+        console.error('[Auth] Init error:', err);
         if (mounted) setLoading(false);
       }
     };
 
     initAuth();
 
-    // Force finish loading after 5 seconds max
+    // Safety timeout
     const timeout = setTimeout(() => {
-      if (mounted) {
+      if (mounted && loading) {
+        console.warn('[Auth] Loading timeout');
         setLoading(false);
       }
-    }, 5000);
+    }, 8000);
 
     return () => {
       mounted = false;
-      controller.abort();
       clearTimeout(timeout);
     };
   }, []);
 
+  // REAL signUp implementation
+  const signUp = async (email: string, password: string, fullName: string) => {
+    try {
+      console.log('[Auth] Signing up:', email);
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName },
+          emailRedirectTo: `${window.location.origin}/login`,
+        },
+      });
+
+      if (error) {
+        console.error('[Auth] SignUp error:', error);
+        return { error: error as Error };
+      }
+
+      console.log('[Auth] SignUp success:', data);
+      
+      // Create profile record
+      if (data.user) {
+        await supabase.from('profiles').insert([
+          {
+            user_id: data.user.id,
+            full_name: fullName,
+            email: email,
+          }
+        ]).catch(err => console.warn('[Auth] Profile creation error:', err));
+      }
+
+      return { error: null };
+    } catch (err) {
+      console.error('[Auth] SignUp exception:', err);
+      return { error: err as Error };
+    }
+  };
+
+  // REAL signIn implementation
+  const signIn = async (email: string, password: string) => {
+    try {
+      console.log('[Auth] Signing in:', email);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error('[Auth] SignIn error:', error);
+        return { error: error as Error };
+      }
+
+      console.log('[Auth] SignIn success:', data);
+      
+      // Session will be updated by the listener
+      return { error: null };
+    } catch (err) {
+      console.error('[Auth] SignIn exception:', err);
+      return { error: err as Error };
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      console.log('[Auth] Signing out');
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error('[Auth] SignOut error:', error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp: async () => ({ error: null }), signIn: async () => ({ error: null }), signOut: async () => {} }}>
+    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
