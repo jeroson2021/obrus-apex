@@ -40,7 +40,7 @@ const SignUp = () => {
     if (error) {
       toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Account created!", description: "Please check your email to verify your account." });
+      toast({ title: "Account created!", description: "Redirecting.........." });
       navigate("/login");
     }
   };
