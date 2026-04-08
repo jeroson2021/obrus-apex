@@ -26,7 +26,7 @@ const whyChooseUs = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background w-full">
       <Navbar />
       <HeroSection />
 
@@ -34,9 +34,9 @@ const Index = () => {
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4 text-center max-w-3xl">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">
@@ -61,9 +61,9 @@ const Index = () => {
       <section className="py-20 bg-muted">
         <div className="container mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
             className="text-center mb-14"
           >
@@ -78,10 +78,10 @@ const Index = () => {
             {whyChooseUs.map((item, i) => (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
                 className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow"
               >
                 <item.icon className="w-10 h-10 text-secondary mb-4" />
@@ -100,7 +100,7 @@ const Index = () => {
       <section className="py-20 bg-primary">
         <div className="container mx-auto px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
