@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    let unsubscribe: (() => void) | null = null;
 
     const initAuth = async () => {
       try {
@@ -33,6 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         });
 
+        unsubscribe = () => subscription.unsubscribe();
+
         // Get current session
         const { data: { session: sess }, error } = await supabase.auth.getSession();
         
@@ -44,8 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(sess?.user ?? null);
           setLoading(false);
         }
-
-        return () => subscription.unsubscribe();
       } catch (err) {
         console.error('[Auth] Init error:', err);
         if (mounted) setLoading(false);
@@ -54,21 +55,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     initAuth();
 
-    // Safety timeout
+    // Safety timeout - force stop loading after 5 seconds
     const timeout = setTimeout(() => {
       if (mounted && loading) {
-        console.warn('[Auth] Loading timeout');
+        console.warn('[Auth] Loading timeout - forcing completion');
         setLoading(false);
       }
-    }, 8000);
+    }, 5000);
 
     return () => {
       mounted = false;
       clearTimeout(timeout);
+      unsubscribe?.();
     };
-  }, []);
+  }, [loading]); // Add loading to dependency array
 
-  // REAL signUp implementation
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
       console.log('[Auth] Signing up:', email);
@@ -86,7 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error: error as Error };
       }
 
-      console.log('[Auth] SignUp success:', data);
+      console.log('[Auth] SignUp success');
       
       // Create profile record
       if (data.user) {
@@ -106,7 +107,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // REAL signIn implementation
   const signIn = async (email: string, password: string) => {
     try {
       console.log('[Auth] Signing in:', email);
@@ -120,9 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error: error as Error };
       }
 
-      console.log('[Auth] SignIn success:', data);
-      
-      // Session will be updated by the listener
+      console.log('[Auth] SignIn success');
       return { error: null };
     } catch (err) {
       console.error('[Auth] SignIn exception:', err);
