@@ -2,20 +2,50 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// Debug: Check if React is loaded
+console.log('✓ React loaded');
+
 const rootElement = document.getElementById("root");
+console.log('Root element:', rootElement);
 
 if (!rootElement) {
+  console.error('✗ Root element not found!');
   throw new Error("Root element not found. Check your index.html file.");
 }
 
 try {
-  createRoot(rootElement).render(<App />);
+  console.log('Creating React root...');
+  const root = createRoot(rootElement);
+  console.log('✓ Root created');
+  
+  console.log('Rendering App...');
+  root.render(<App />);
+  console.log('✓ App rendered successfully!');
 } catch (error) {
-  console.error("Failed to render app:", error);
+  console.error("❌ Failed to render app:", error);
+  
+  // Show detailed error
+  const errorMsg = error instanceof Error ? error.message : String(error);
+  const errorStack = error instanceof Error ? error.stack : '';
+  
   rootElement.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#fff;flex-direction:column;font-family:sans-serif">
-      <h1>Error Loading Application</h1>
-      <p>${error instanceof Error ? error.message : "Unknown error"}</p>
+    <div style="
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+      background:#fff;
+      flex-direction:column;
+      font-family:sans-serif;
+      padding: 20px;
+    ">
+      <h1 style="color: red; margin-bottom: 10px;">❌ Error Loading Application</h1>
+      <p style="color: #333; max-width: 500px; white-space: pre-wrap; background: #f5f5f5; padding: 15px; border-radius: 5px;">
+        <strong>Error:</strong> ${errorMsg}
+        
+        <strong style="display: block; margin-top: 10px;">Stack:</strong>
+        ${errorStack}
+      </p>
     </div>
   `;
 }
