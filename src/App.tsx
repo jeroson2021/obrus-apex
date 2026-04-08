@@ -1,4 +1,3 @@
-// src/App.tsx
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -33,7 +32,15 @@ import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminJobs from "./pages/admin/AdminJobs";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1 },
+  },
+});
+
+const AppContent = () => (
+  <ScrollToTop />
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -42,7 +49,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <ScrollToTop />
+          <AppContent />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
