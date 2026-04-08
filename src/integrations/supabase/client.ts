@@ -14,7 +14,7 @@ if (typeof window !== 'undefined') {
 // Create client with fallback values to prevent crashes
 export const supabase = createClient<Database>(
   SUPABASE_URL || 'https://ghgxsyeninorvkhfzerx.supabase.co',
-  SUPABASE_PUBLISHABLE_KEY || 'ghgxsyeninorvkhfzerx',
+  SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_KXr6QrF7CYKC5XV15CGpGQ_31slLsbz',
   {
     auth: {
       storage: typeof window !== 'undefined' ? localStorage : undefined,
