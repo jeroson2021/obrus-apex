@@ -1,4 +1,6 @@
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom"; // Added this
+import { AuthProvider } from "@/contexts/AuthContext"; // Added this
 import App from "./App.tsx";
 import "./index.css";
 
@@ -19,7 +21,14 @@ try {
   console.log('✓ Root created');
   
   console.log('Rendering App...');
-  root.render(<App />);
+  // Wrapped App with BrowserRouter and AuthProvider to prevent crashes
+  root.render(
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  );
   console.log('✓ App rendered successfully!');
 } catch (error) {
   console.error("❌ Failed to render app:", error);
