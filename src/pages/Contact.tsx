@@ -1,10 +1,55 @@
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const { error } = await supabase.from("contact_messages").insert({
+        full_name: fullName,
+        email,
+        phone: phone || null,
+        message,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: "Your message has been sent. We'll get back to you soon.",
+      });
+
+      // Reset form
+      setFullName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to send message",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -75,7 +120,7 @@ const Contact = () => {
               <div className="mt-8 rounded-lg overflow-hidden border border-border">
                 <iframe
                   title="Obrus Apex Services Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15905.0!2d7.05!3d4.85!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1069d3a!2sElelewon%2C+Port+Harcourt!5e0!3m2!1sen!2sng!4v1700000000000"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15905.0!2d7.05!3d4.85!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1069d3a!2sElelewon%2C+Port+Harcourt!5e0!3m2!1..."
                   width="100%"
                   height="200"
                   style={{ border: 0 }}
@@ -93,12 +138,15 @@ const Contact = () => {
               transition={{ duration: 0.6 }}
             >
               <h2 className="font-heading text-2xl font-bold text-foreground mb-6">Send Us a Message</h2>
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <label className="text-sm font-medium text-foreground mb-1 block">Your Name</label>
                   <input
                     type="text"
                     placeholder="Full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
                     className="w-full bg-card border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   />
                 </div>
@@ -107,6 +155,9 @@ const Contact = () => {
                   <input
                     type="email"
                     placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                     className="w-full bg-card border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   />
                 </div>
@@ -115,6 +166,8 @@ const Contact = () => {
                   <input
                     type="tel"
                     placeholder="+234..."
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="w-full bg-card border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   />
                 </div>
@@ -123,14 +176,18 @@ const Contact = () => {
                   <textarea
                     rows={5}
                     placeholder="How can we help you?"
-                    className="w-full bg-card border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors resize-none"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    required
+                    className="w-full bg-card border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-primary text-primary-foreground py-3 rounded-md font-heading font-semibold text-sm hover:opacity-90 transition-opacity"
+                  disabled={submitting}
+                  className="w-full bg-primary text-primary-foreground py-3 rounded-md font-heading font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
-                  Send Message
+                  {submitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </motion.div>
