@@ -15,16 +15,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const { signIn, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redirect if already logged in
-  // We remove !authLoading here to make it more responsive to the 'user' state change
+  // Redirect instantly if user is detected
   useEffect(() => {
     if (user) {
-      console.log('[Login] User detected, redirecting to dashboard...');
       navigate("/dashboard", { replace: true });
     }
   }, [user, navigate]);
@@ -37,34 +34,19 @@ const Login = () => {
     }
 
     setLoading(true);
-    try {
-      console.log('[Login] Attempting login with:', email);
-      const { error } = await signIn(email, password);
+    const { error } = await signIn(email, password);
 
-      if (error) {
-        console.error('[Login] Login failed:', error);
-        toast({ 
-          title: "Login failed", 
-          description: error.message, 
-          variant: "destructive" 
-        });
-        setLoading(false); // Only stop loading if there is an error
-      } else {
-        console.log('[Login] Login successful');
-        toast({ title: "Welcome back!", description: "Redirecting to dashboard..." });
-        // We don't necessarily need navigate here because the useEffect above 
-        // will catch the change in the 'user' object and redirect automatically.
-      }
-    } catch (err) {
-      console.error('[Login] Unexpected error:', err);
+    if (error) {
       setLoading(false);
+      toast({ 
+        title: "Login failed", 
+        description: error.message, 
+        variant: "destructive" 
+      });
+    } else {
+      toast({ title: "Welcome back!", description: "Redirecting..." });
+      // The useEffect above will handle the actual navigation
     }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setGoogleLoading(true);
-    toast({ title: "Google sign-in not configured yet" });
-    setGoogleLoading(false);
   };
 
   return (
@@ -79,21 +61,6 @@ const Login = () => {
                 <LogIn className="w-10 h-10 text-secondary mx-auto mb-4" />
                 <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Welcome Back</h1>
                 <p className="text-muted-foreground text-sm">Sign in to your account</p>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full mb-4 flex items-center justify-center gap-2"
-                onClick={handleGoogleSignIn}
-                disabled={googleLoading}
-              >
-                {googleLoading ? "Signing in..." : "Continue with Google"}
-              </Button>
-
-              <div className="relative mb-4">
-                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">or</span></div>
               </div>
 
               <form onSubmit={handleLogin} className="space-y-4">
