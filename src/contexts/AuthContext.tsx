@@ -20,31 +20,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    let unsubscribe: (() => void) | null = null;
 
+    // 1. Get initial session
     const initAuth = async () => {
       try {
-        // Set up listener for auth state changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, sess) => {
-          if (mounted) {
-            console.log('[Auth] State changed:', _event);
-            setSession(sess);
-            setUser(sess?.user ?? null);
-            setLoading(false);
-          }
-        });
-
-        unsubscribe = () => subscription.unsubscribe();
-
-        // Get current session
-        const { data: { session: sess }, error } = await supabase.auth.getSession();
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (mounted) {
           if (error) {
             console.warn('[Auth] Session error:', error);
           }
-          setSession(sess ?? null);
-          setUser(sess?.user ?? null);
+          setSession(initialSession);
+          setUser(initialSession?.user ?? null);
           setLoading(false);
         }
       } catch (err) {
@@ -55,7 +42,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     initAuth();
 
-    // Safety timeout - force stop loading after 5 seconds
+    // 2. Listen for auth changes (login, logout, token refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+      if (mounted) {
+        console.log('[Auth] State changed:', _event);
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        setLoading(false); // Ensure loading is false once we have a state change
+      }
+    });
+
+    // Safety timeout - force stop loading after 5 seconds if something hangs
     const timeout = setTimeout(() => {
       if (mounted && loading) {
         console.warn('[Auth] Loading timeout - forcing completion');
@@ -66,9 +63,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       mounted = false;
       clearTimeout(timeout);
-      unsubscribe?.();
+      subscription.unsubscribe();
     };
-  }, [loading]); // Add loading to dependency array
+  }, []); // Empty dependency array: only run once on mount
 
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
@@ -89,15 +86,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       console.log('[Auth] SignUp success');
       
-      // Create profile record
+      // Create profile record manually if user was created
       if (data.user) {
-        await supabase.from('profiles').insert([
+        const { error: profileError } = await supabase.from('profiles').insert([
           {
             user_id: data.user.id,
             full_name: fullName,
             email: email,
           }
-        ]).catch(err => console.warn('[Auth] Profile creation error:', err));
+        ]);
+        
+        if (profileError) {
+          console.warn('[Auth] Profile creation error:', profileError);
+        }
       }
 
       return { error: null };
@@ -120,6 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return { error: error as Error };
       }
 
+      // Note: onAuthStateChange will handle setting the user/session state
       console.log('[Auth] SignIn success');
       return { error: null };
     } catch (err) {
@@ -141,13 +143,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut }}>
-      {children}
+      {!loading ? children : (
+        // Optional: Show a simple loader or nothing while checking auth
+        <div className="min-h-screen bg-background flex items-center justify-center">
+           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-secondary"></div>
+        </div>
+      )}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 };
