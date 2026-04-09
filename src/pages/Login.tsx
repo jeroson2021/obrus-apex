@@ -21,12 +21,13 @@ const Login = () => {
   const { toast } = useToast();
 
   // Redirect if already logged in
+  // We remove !authLoading here to make it more responsive to the 'user' state change
   useEffect(() => {
-    if (!authLoading && user) {
-      console.log('[Login] User already logged in, redirecting...');
-      navigate("/dashboard");
+    if (user) {
+      console.log('[Login] User detected, redirecting to dashboard...');
+      navigate("/dashboard", { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,26 +37,27 @@ const Login = () => {
     }
 
     setLoading(true);
-    console.log('[Login] Attempting login with:', email);
-    
-    const { error } = await signIn(email, password);
-    setLoading(false);
+    try {
+      console.log('[Login] Attempting login with:', email);
+      const { error } = await signIn(email, password);
 
-    if (error) {
-      console.error('[Login] Login failed:', error);
-      toast({ 
-        title: "Login failed", 
-        description: error.message, 
-        variant: "destructive" 
-      });
-    } else {
-      console.log('[Login] Login successful, will redirect...');
-      toast({ title: "Welcome back!", description: "Redirecting to dashboard..." });
-      
-      // Wait a bit for session to update, then redirect
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 500);
+      if (error) {
+        console.error('[Login] Login failed:', error);
+        toast({ 
+          title: "Login failed", 
+          description: error.message, 
+          variant: "destructive" 
+        });
+        setLoading(false); // Only stop loading if there is an error
+      } else {
+        console.log('[Login] Login successful');
+        toast({ title: "Welcome back!", description: "Redirecting to dashboard..." });
+        // We don't necessarily need navigate here because the useEffect above 
+        // will catch the change in the 'user' object and redirect automatically.
+      }
+    } catch (err) {
+      console.error('[Login] Unexpected error:', err);
+      setLoading(false);
     }
   };
 
