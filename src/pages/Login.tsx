@@ -15,16 +15,18 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const { signIn, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redirect instantly if user is detected
+  // Redirect if already logged in - using a stable effect
   useEffect(() => {
-    if (user) {
+    if (!authLoading && user) {
+      console.log('[Login] User already logged in, redirecting...');
       navigate("/dashboard", { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,66 +36,119 @@ const Login = () => {
     }
 
     setLoading(true);
-    const { error } = await signIn(email, password);
-
-    if (error) {
+    try {
+      console.log('[Login] Attempting login with:', email);
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        console.error('[Login] Login failed:', error);
+        toast({ 
+          title: "Login failed", 
+          description: error.message, 
+          variant: "destructive" 
+        });
+        setLoading(false);
+      } else {
+        console.log('[Login] Login successful');
+        toast({ title: "Welcome back!", description: "Redirecting to dashboard..." });
+        // The useEffect above handles the navigation once the user state updates
+      }
+    } catch (err) {
       setLoading(false);
-      toast({ 
-        title: "Login failed", 
-        description: error.message, 
-        variant: "destructive" 
-      });
-    } else {
-      toast({ title: "Welcome back!", description: "Redirecting..." });
-      // The useEffect above will handle the actual navigation
+      toast({ title: "Error", description: "An unexpected error occurred", variant: "destructive" });
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    toast({ title: "Google sign-in not configured yet" });
+    setGoogleLoading(false);
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <section className="pt-28 pb-20 bg-muted min-h-[80vh] flex items-center">
         <div className="container mx-auto px-4">
-          <div className="max-w-md mx-auto"><BackButton /></div>
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-md mx-auto">
-            <div className="bg-card border border-border rounded-lg p-8">
+          <div className="max-w-md mx-auto">
+            <BackButton />
+          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6 }} 
+            className="max-w-md mx-auto"
+          >
+            <div className="bg-card border border-border rounded-lg p-8 shadow-sm">
               <div className="text-center mb-8">
                 <LogIn className="w-10 h-10 text-secondary mx-auto mb-4" />
                 <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Welcome Back</h1>
                 <p className="text-muted-foreground text-sm">Sign in to your account</p>
               </div>
 
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full mb-4 flex items-center justify-center gap-2"
+                onClick={handleGoogleSignIn}
+                disabled={googleLoading}
+              >
+                {googleLoading ? "Signing in..." : "Continue with Google"}
+              </Button>
+
+              <div className="relative mb-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">or</span>
+                </div>
+              </div>
+
               <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                  <Label>Email Address</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
                   <Input 
+                    id="email"
                     type="email" 
                     placeholder="you@example.com" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)} 
                     required 
+                    className="bg-background"
                   />
                 </div>
-                <div>
-                  <Label>Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
                   <Input 
+                    id="password"
                     type="password" 
                     placeholder="••••••••" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
+                    className="bg-background"
                   />
                 </div>
                 <div className="text-right">
-                  <Link to="/forgot-password" className="text-sm text-secondary hover:underline">Forgot password?</Link>
+                  <Link to="/forgot-password" disable-transitions="true" className="text-sm text-secondary hover:underline">
+                    Forgot password?
+                  </Link>
                 </div>
-                <Button type="submit" variant="secondary" className="w-full" disabled={loading || authLoading}>
+                <Button 
+                  type="submit" 
+                  variant="secondary" 
+                  className="w-full" 
+                  disabled={loading || authLoading}
+                >
                   {loading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
               <p className="text-center text-muted-foreground text-sm mt-6">
                 Don't have an account?{" "}
-                <Link to="/signup" className="text-secondary font-medium hover:underline">Sign Up</Link>
+                <Link to="/signup" className="text-secondary font-medium hover:underline">
+                  Sign Up
+                </Link>
               </p>
             </div>
           </motion.div>
