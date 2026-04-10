@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "build:analyze": "vite build --mode analyze",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "start": "serve -s dist -l $PORT"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -67,7 +68,8 @@
     "tailwindcss-animate": "^1.0.7",
     "terser": "^5.0.0",
     "vaul": "^0.9.9",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "serve": "^14.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
