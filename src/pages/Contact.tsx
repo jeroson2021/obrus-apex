@@ -87,7 +87,7 @@ const Contact = () => {
               <h2 className="font-heading text-2xl font-bold text-foreground mb-6">Contact Information</h2>
               <div className="space-y-5 mb-8">
                 {[
-                  { icon: Phone, label: "Phone", text: "+234 807 874 7510", href: "tel:+2348078747510" },
+                  { icon: Phone, label: "Phone", text: "+234 701 371 5767", href: "tel:+2347013715767" },
                   { icon: Mail, label: "Email", text: "info@obrusApex.com.ng", href: "mailto:info@obrusApex.com.ng" },
                   { icon: MapPin, label: "Address", text: "Elelewon, Port Harcourt, Nigeria" },
                 ].map((item) => (
@@ -108,7 +108,7 @@ const Contact = () => {
               </div>
 
               <a
-                href="https://wa.me/2348078747510"
+                href="https://wa.me/2347013715767"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-6 py-3 rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
