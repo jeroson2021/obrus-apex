@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
+import AIDocumentGenerator from "@/components/AIDocumentGenerator";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ProjectsShowcase from "@/components/ProjectsShowcase";
 import Footer from "@/components/Footer";
@@ -93,6 +94,7 @@ const Index = () => {
         </div>
       </section>
 
+      <AIDocumentGenerator />
       <ProjectsShowcase />
       <TestimonialsSection />
 
